@@ -1,6 +1,3 @@
-// ELEC2645 Unit 2 Project Template
-// Command Line Application Menu Handling Code
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -43,7 +40,7 @@ static int get_user_input(void)
     int value = 0;
 
     do {
-        printf("\nSelect item: ");
+        printf("\nSelect an action to perform: ");
         if (!fgets(buf, sizeof(buf), stdin)) {
             /* EOF or error; bail out gracefully */
             puts("\nInput error. Exiting.");
@@ -74,7 +71,7 @@ static void select_menu_item(int input)
 {
     switch (input) {
         case 1:
-            menu_item_1();
+            Calculate_MOS_device_parameter();
             go_back_to_main();
             break;
         case 2:
@@ -90,7 +87,7 @@ static void select_menu_item(int input)
             go_back_to_main();
             break;
         default:
-            printf("Bye!\n");
+            printf("Program has ended!\n");
             exit(0);
     }
 }
@@ -100,11 +97,11 @@ static void print_main_menu(void)
     printf("\n----------- Main menu -----------\n");
     printf("\n"
            "\t\t\t\t\t\t\n"
-           "\t1. Menu item 1\t\t\n"
-           "\t2. Menu item 2\t\t\n"
-           "\t3. Menu item 3\t\t\n"
-           "\t4. Menu item 4\t\t\n"
-           "\t5. Exit\t\t\t\t\n"
+           "\t1. Single MOS device parameter calculations\t\t\n"
+           "\t2. Device component selection calculations\t\t\n"
+           "\t3. Performance calculation\t\t\n"
+           "\t4. Printout Metrics\t\t\n"
+           "\t5. Exit the program\t\t\t\t\n"
            "\t\t\t\t\t\t\n");
     printf("---------------------------------------------\n");
 }
