@@ -4,8 +4,21 @@
 #include <stdlib.h>
 #include <ctype.h>
 
+void print_device_parameters(void)
+{
+    printf("\n================ Current Device Parameters ================\n");
+    printf("μn    = %.4g\n", device.mu_n);
+    printf("Cox   = %.4g\n", device.Cox);
+    printf("W     = %.4g\n", device.W);
+    printf("L     = %.4g\n", device.L);
+    printf("VGS   = %.4g\n", device.VGS);
+    printf("VTH   = %.4g\n", device.VTH);
+    printf("VDS   = %.4g\n", device.VDS);
+    printf("==================================================\n");
+}
 
-float get_user_input_custom(const char *variable_name){
+
+float get_user_input_custom(const char *variable_name){   // Modified based on get_user_input template
     char buf[128];
     int valid_input = 0;
     float value = 0;
@@ -76,7 +89,7 @@ int is_number(const char *s)  // Modified based on is_int template
 
 float get_confirmed_value(const char *variable_name)
 {
-    for (;;) {
+    for (;;) {   // loop until user confirms
         float value = get_user_input_custom(variable_name);
 
         printf("You entered %.6f for %s\n", value, variable_name);
@@ -84,17 +97,42 @@ float get_confirmed_value(const char *variable_name)
 
         char buf[16];
         if (!fgets(buf, sizeof(buf), stdin)) {
-            puts("\nInput error. Exiting.");
+            puts("\nInput error. Exiting.");   // safety: EOF or stdin failure
             exit(1);
         }
-        buf[strcspn(buf, "\r\n")] = '\0';   // strip newline
+        buf[strcspn(buf, "\r\n")] = '\0';   // remove newline characters
 
         if (buf[0] == 'y' || buf[0] == 'Y') {
             return value;                  // accept and return to caller
         }
         else if (buf[0] == 'n' || buf[0] == 'N') {
-            // loop again: re-enter the same variable
             printf("Re-entering %s...\n", variable_name);
+            // loop continues for re-entry
+        }
+        else {
+            printf("Please type 'y' or 'n'. Asking again.\n");
+        }
+    }
+}
+
+
+int confirm_new_input_or_use_existing(void)
+{
+    for (;;) {   // repeat until valid y/n choice
+        printf("New device? (y = enter new parameters, n = calculate with existing parameters): ");
+
+        char buf[16];
+        if (!fgets(buf, sizeof(buf), stdin)) {
+            puts("\nInput error. Exiting.");   // same safety check
+            exit(1);
+        }
+        buf[strcspn(buf, "\r\n")] = '\0';   // strip newline
+
+        if (buf[0] == 'y' || buf[0] == 'Y') {
+            return 1;      // user chooses to enter new values
+        }
+        else if (buf[0] == 'n' || buf[0] == 'N') {
+            return 0;      // user chooses to reuse existing parameters
         }
         else {
             printf("Please type 'y' or 'n'. Asking again.\n");
