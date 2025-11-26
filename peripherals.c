@@ -72,3 +72,32 @@ int is_number(const char *s)  // Modified based on is_int template
 
     return seen_digit;
 }
+
+
+float get_confirmed_value(const char *variable_name)
+{
+    for (;;) {
+        float value = get_user_input_custom(variable_name);
+
+        printf("You entered %.6f for %s\n", value, variable_name);
+        printf("Confirm? (y = accept, n = re-enter): ");
+
+        char buf[16];
+        if (!fgets(buf, sizeof(buf), stdin)) {
+            puts("\nInput error. Exiting.");
+            exit(1);
+        }
+        buf[strcspn(buf, "\r\n")] = '\0';   // strip newline
+
+        if (buf[0] == 'y' || buf[0] == 'Y') {
+            return value;                  // accept and return to caller
+        }
+        else if (buf[0] == 'n' || buf[0] == 'N') {
+            // loop again: re-enter the same variable
+            printf("Re-entering %s...\n", variable_name);
+        }
+        else {
+            printf("Please type 'y' or 'n'. Asking again.\n");
+        }
+    }
+}
