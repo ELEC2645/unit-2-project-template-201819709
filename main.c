@@ -34,7 +34,7 @@ static void main_menu(void)
 
 static int get_user_input(void)
 {
-    enum { MENU_ITEMS = 5 };   /* 1..4 = items, 5 = Exit */
+    enum { MENU_ITEMS = 6 };   /* 1..4 = items, 5 = Exit */
     char buf[128];
     int valid_input = 0;
     int value = 0;
@@ -83,8 +83,11 @@ static void select_menu_item(int input)
             go_back_to_main();
             break;
         case 4:
-            menu_item_4();
+            export_all_parameters_to_file();
             go_back_to_main();
+            break;
+        case 5:
+            modify_single_parameter();
             break;
         default:
             printf("Program has ended!\n");
@@ -101,7 +104,8 @@ static void print_main_menu(void)
            "\t2. Device component selection calculations\t\t\n"
            "\t3. Performance calculation\t\t\n"
            "\t4. Printout Metrics\t\t\n"
-           "\t5. Exit the program\t\t\t\t\n"
+           "\t5. Modify single parameter\t\t\n"
+           "\t6. Exit the program\t\t\t\t\n"
            "\t\t\t\t\t\t\n");
     printf("---------------------------------------------\n");
 }

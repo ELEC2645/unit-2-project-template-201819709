@@ -32,10 +32,38 @@ void print_device_parameters(int choice)
         break;
 
         case 3:
-        /* code */
+            printf("\n================= Current Performance Parameters =================\n");
+            printf("Cs            = %.4g F\n",     device.Cs);
+            printf("Temperature   = %.4g K\n",     device.Temperature);
+            printf("VFS           = %.4g V\n",     device.VFS);
+            printf("Nbits         = %d\n",         device.Nbits);
+            printf("=================================================================\n\n");
         break;
 
-    default:
+    case 0:
+        default:
+            printf("\n==================== ALL Device Parameters ======================\n");
+       
+            printf("μn        = %.4g\n", device.mu_n);
+            printf("Cox       = %.4g\n", device.Cox);
+            printf("W         = %.4g\n", device.W);
+            printf("L         = %.4g\n", device.L);
+            printf("VGS       = %.4g\n", device.VGS);
+            printf("VTH       = %.4g\n", device.VTH);
+            printf("VDS       = %.4g\n", device.VDS);
+            printf("lambda    = %.4g\n", device.lambda);
+
+            printf("Temperature = %.4g K\n",   device.Temperature);
+            printf("Cs          = %.4g F\n",   device.Cs);
+            printf("vrms        = %.4g V\n",   device.vrms);
+            printf("AC          = %.4g\n",     device.AC);
+            printf("Area        = %.4g m^2\n", device.Area);
+            printf("Ron         = %.4g ohms\n", device.Ron);
+
+            printf("VFS         = %.4g V\n",    device.VFS);
+            printf("Nbits       = %d\n",        device.Nbits);
+
+            printf("=================================================================\n\n");
         break;
     }
 

@@ -2,6 +2,7 @@
     "makefile.configureOnOpen": false,
     "files.associations": {
         "funcs.h": "c",
-        "string.h": "c"
+        "string.h": "c",
+        "stdio.h": "c"
     }
 }
