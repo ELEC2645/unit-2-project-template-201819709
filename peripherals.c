@@ -4,17 +4,41 @@
 #include <stdlib.h>
 #include <ctype.h>
 
-void print_device_parameters(void)
+void print_device_parameters(int choice)
 {
-    printf("\n================ Current Device Parameters ================\n");
-    printf("μn    = %.4g\n", device.mu_n);
-    printf("Cox   = %.4g\n", device.Cox);
-    printf("W     = %.4g\n", device.W);
-    printf("L     = %.4g\n", device.L);
-    printf("VGS   = %.4g\n", device.VGS);
-    printf("VTH   = %.4g\n", device.VTH);
-    printf("VDS   = %.4g\n", device.VDS);
-    printf("==================================================\n");
+    switch (choice)
+    {
+        case 1:
+            printf("\n================ Current Device Parameters ================\n");
+            printf("μn    = %.4g\n", device.mu_n);
+            printf("Cox   = %.4g\n", device.Cox);
+            printf("W     = %.4g\n", device.W);
+            printf("L     = %.4g\n", device.L);
+            printf("VGS   = %.4g\n", device.VGS);
+            printf("VTH   = %.4g\n", device.VTH);
+            printf("VDS   = %.4g\n", device.VDS);
+            printf("==================================================\n");
+        break;
+
+        case 2:
+            printf("\n=================  Current Device Parameters  =================\n");
+            printf("Temperature   = %.4g K\n",    device.Temperature);
+            printf("AC            = %.4g\n",      device.AC);
+            printf("Area          = %.4g m^2\n",   device.Area);
+            printf("Cs            = %.4g F\n",     device.Cs);
+            printf("vrms          = %.4g V\n",     device.vrms);
+            printf("Ron           = %.4g ohms\n",  device.Ron);
+            printf("===============================================================\n\n");
+        break;
+
+        case 3:
+        /* code */
+        break;
+
+    default:
+        break;
+    }
+
 }
 
 
@@ -92,7 +116,7 @@ float get_confirmed_value(const char *variable_name)
     for (;;) {   // loop until user confirms
         float value = get_user_input_custom(variable_name);
 
-        printf("You entered %.6f for %s\n", value, variable_name);
+        printf("You entered %.15f for %s\n", value, variable_name);
         printf("Confirm? (y = accept, n = re-enter): ");
 
         char buf[16];
@@ -138,4 +162,9 @@ int confirm_new_input_or_use_existing(void)
             printf("Please type 'y' or 'n'. Asking again.\n");
         }
     }
+}
+
+void clear_screen(void) {
+    printf("\033[2J\033[H");    // clear screen + move cursor to top-left (ANSI escape codes)
+    fflush(stdout);
 }

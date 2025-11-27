@@ -75,7 +75,7 @@ static void select_menu_item(int input)
             go_back_to_main();
             break;
         case 2:
-            menu_item_2();
+            device_component_selection_calculations();
             go_back_to_main();
             break;
         case 3:
@@ -117,6 +117,7 @@ static void go_back_to_main(void)
         }
         buf[strcspn(buf, "\r\n")] = '\0'; /* strip newline */
     } while (!(buf[0] == 'b' || buf[0] == 'B') || buf[1] != '\0');
+    clear_screen();
 }
 
 /* Return 1 if s is an optional [+/-] followed by one-or-more digits, else 0. */
