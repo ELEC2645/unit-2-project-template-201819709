@@ -3,7 +3,7 @@
 
 void Calculate_MOS_device_parameter(void);
 void device_component_selection_calculations(void);
-void menu_item_3(void);
+void performance_calculation(void);
 void menu_item_4(void);
 float get_user_input_custom(const char *variable_name);
 float get_confirmed_value(const char *variable_name);

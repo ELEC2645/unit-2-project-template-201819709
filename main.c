@@ -79,7 +79,7 @@ static void select_menu_item(int input)
             go_back_to_main();
             break;
         case 3:
-            menu_item_3();
+            performance_calculation();
             go_back_to_main();
             break;
         case 4:
