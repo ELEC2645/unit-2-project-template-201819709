@@ -1,37 +1,13 @@
-[![Open in Codespaces](https://classroom.github.com/assets/launch-codespace-2972f46106e565e64193e422d61a12cf1da4916b45550586e14ef0a7c637dd04.svg)](https://classroom.github.com/open-in-codespaces?assignment_repo_id=21835643)
-# ELEC2645 Unit 2 Project Template
+The program is a calculator designed to help SAR Analog-to-digital converter designers to design and to validate their work.
 
-** PLEASE DELETE THIS README AND REPLACE IT WITH YOUR OWN README.md FILE DESCRIBING YOUR PROJECT **
+There are 5 functions available, each carries out a different task.
 
+Function 1: Calculate for single MOS parameters. It will ask you for values of a single MOS and give you calculated parameters. Note that it will accept very unreasonable values, because real commercial EDAs also allow you to do that. Therefore it is the user's responsibility to ensure you are entering reasonable values! However, basic input validations are in place so you can't enter strings for numbers.
 
-This is the basic code for a command line application which you should use for your Unit 2 project.
+Function 2: Similar to function 1, but this time it uses some of the values from function 1 and computes parameters for peripheral components such as capacitor values. Note that you must fill in certain numbers from function 1 in order for function 2 to work, failure to do so will trigger a warning.
 
-The code has separated the menu handling code in `main.c` and the function implementations in `funcs.c`. You should add your code to `funcs.c` (or you can create new files if you wish), and update `main.c` to call your functions from the menu.
+Function 3: Perform ADC metrics calculation. The calculation will depend on values in function 1 and 2, so it follows a similar requirement for function 2.
 
+Function 4: Read / write CSV file, either stores the values in the program or writes them out. Notice that if you input a file to the system, it must match the given format or else the program won't allow the input action.
 
-### 1 Run code
-
-You can build the code as we have been using in the labs with 
-`gcc main.c funcs.c -o main.out -lm` (the `-lm` is required to link the math library). You can also use `make -B` to force a rebuild using the provided `Makefile`.
-
-Then run the code with `./main.out`
-
-
-### 2 The assignment
-
-Please read the assignment brief on the Minerva page for details of what you need to implement. 
-
-
-
-### 3 Test command
-
-The `test.sh` script is provided to check that your code compiles correctly. This is what the autograder will use to check your submission. You can run it with `bash test.sh` or `./test.sh` or just `make test`. 
-
-You do not need to modify this script, but you can look at it to see what it does.
-
-
-### 4 Submit Solution
-
-Use the same method as previous labs to commit and push your code to your GitHub repository for the autograder to check. 
-
-In your final journal post, please include a link to your GitHub repository containing your code  *and* a zip file of your code as an attachment.
+Function 5: If you know what you are doing, you can modify single device parameter to get to where you want quickly without going into detail of each function. However if you are not careful with what you are entering, this may result in weird numerical results, which you might not want to do unless you are very familiar with the topic!
