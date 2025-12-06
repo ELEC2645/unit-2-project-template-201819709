@@ -35,21 +35,21 @@ void Calculate_MOS_device_parameter(void) {
     printf("\n================= MOSFET Calculations =================\n");
 
     float VOV = device.VGS - device.VTH;   // overdrive voltage
-    printf("VOV (overdrive voltage) = %.6f V\n", VOV);
+    printf("VOV (Reference range 50 mV to 200 mV) = %.6f V\n", VOV);
 
     // STORE RESULT
     results.VOV = VOV;
 
     // ID in linear region
     float ID_linear = device.mu_n * device.Cox * (device.W / device.L) * ((device.VGS - device.VTH) * device.VDS - (device.VDS * device.VDS) / 2.0f);
-    printf("ID (linear region) = %.6f A\n", ID_linear);
+    printf("ID linear region (Reference range 5 µA to 500 µA) = %.6f A\n", ID_linear);
 
     // STORE RESULT
     results.ID_linear = ID_linear;
 
     // ID in saturation
     float ID_saturation = 0.5f * device.mu_n * device.Cox * (device.W / device.L) * (VOV * VOV);
-    printf("ID (saturation region) = %.6f A\n", ID_saturation);
+    printf("ID saturation region (Reference range 100 µA to 10 mA) = %.6f A\n", ID_saturation);
 
     // STORE RESULT
     results.ID_saturation = ID_saturation;
@@ -60,7 +60,7 @@ void Calculate_MOS_device_parameter(void) {
     else
         gm = 0.0f;
 
-    printf("Transconductance gm = %.6f S (A/V)\n", gm);
+    printf("Transconductance (Reference range 0.1 mS to 10 mS) = %.6f S (A/V)\n", gm);
 
     // STORE RESULT
     results.gm = gm;
@@ -71,13 +71,13 @@ void Calculate_MOS_device_parameter(void) {
     else
         ro = 0.0f;
 
-    printf("Output resistance ro = %.6f ohms\n", ro);
+    printf("Output resistance (Reference range > 20 kΩ) = %.6f ohms\n", ro);
 
     // STORE RESULT
     results.ro = ro;
 
     float Av = gm * ro;          // intrinsic gain
-    printf("Intrinsic gain Av = %.6f V/V\n", Av);
+    printf("Intrinsic gain (Reference range 10 to 300) = %.6f V/V\n", Av);
 
     // STORE RESULT
     results.Av = Av;
@@ -127,7 +127,7 @@ void device_component_selection_calculations(void)
     float vn_rms = 0.0f;  // kt/c noise
     if (device.Cs > 0 && device.Temperature > 0) {
         vn_rms = sqrtf(k * device.Temperature / device.Cs);
-        printf("kT/C noise (vn_rms) = %.6e V\n", vn_rms);
+        printf("kT/C noise (Reference range 20 µV to 2 mV) = %.6e V\n", vn_rms);
 
         results.vn_rms = vn_rms;
         results.Psampling = k * device.Temperature / device.Cs;
@@ -140,7 +140,7 @@ void device_component_selection_calculations(void)
 
     if (device.vrms > 0) {
         float Cs_required = k * device.Temperature / (device.vrms * device.vrms);
-        printf("Required sampling capacitance Cs = %.6e F\n", Cs_required);
+        printf("Required sampling capacitance Cs (Reference range 10 fF to 10 pF) = %.6e F\n", Cs_required);
 
         results.Cs_required = Cs_required;
     } else {
@@ -150,7 +150,7 @@ void device_component_selection_calculations(void)
 
     if (device.Area > 0) {
         float sigmaC_over_C = device.AC / sqrtf(device.Area);
-        printf("Capacitor mismatch (sigmaC/C) = %.6e\n", sigmaC_over_C);
+        printf("Capacitor mismatch (Reference range 0.01 to 0.2) = %.6e\n", sigmaC_over_C);
 
         results.mismatch = sigmaC_over_C;
     } else {
@@ -160,7 +160,7 @@ void device_component_selection_calculations(void)
 
     float denom = device.mu_n * device.Cox * (device.W / device.L) * overdrive;
     device.Ron = 1.0f / denom;
-    printf("Estimated MOS switch on-resistance Ron = %.6e ohms\n", device.Ron);
+    printf("Estimated MOS switch on-resistance Ron (Reference range 50 Ω to 5 kΩ) = %.6e ohms\n", device.Ron);
 
     printf("====================================================================\n\n");
 }
@@ -343,6 +343,17 @@ void modify_single_parameter(void)
 }
 
 
+void choose_in_or_out(void)
+{
+    char fname[30] = "device_report.csv";
+    int choice = confirm_input_or_output();   // 1 = INPUT 0 = OUTPUT
+    if (choice == 1) {
+        import_device_report_csv(fname); 
+    } else {
+        export_all_parameters_to_file();
+    }
+}
+
 void export_all_parameters_to_file(void)
 {
     FILE *fp = fopen("device_report.csv", "w");
@@ -361,7 +372,7 @@ void export_all_parameters_to_file(void)
         fprintf(fp,
             "mu_n,Cox,W,L,VGS,VTH,VDS,lambda,Temperature,AC,Area,Cs,vrms,Ron,VFS,Nbits,VOV,ID_linear,ID_saturation,gm,ro,Av,vn_rms,Cs_required,mismatch,Psampling,Pq,SNR_linear,SNR_dB,ENOB\n");
 
-        // Row 2
+        // Row 2 g=general floating-point format.
         fprintf(fp,"%.10g,%.10g,%.10g,%.10g,%.10g,%.10g,%.10g,%.10g,%.10g,%.10g,%.10g,%.10g,%.10g,%.10g,%.10g,%d,%.10g,%.10g,%.10g,%.10g,%.10g,%.10g,%.10g,%.10g,%.10g,%.10g,%.10g,%.10g,%.10g,%.10g\n",
 
             device.mu_n, device.Cox, device.W, device.L,device.VGS, device.VTH, device.VDS, device.lambda,device.Temperature, device.AC, device.Area, device.Cs,device.vrms, device.Ron,device.VFS, device.Nbits,
@@ -372,4 +383,71 @@ void export_all_parameters_to_file(void)
         fclose(fp);
 
         printf("\nCSV successfully generated\n");
+}
+
+int import_device_report_csv(const char *fname)
+{
+    const char *HEADER =
+        "mu_n,Cox,W,L,VGS,VTH,VDS,lambda,Temperature,AC,Area,Cs,vrms,Ron,VFS,Nbits,VOV,ID_linear,ID_saturation,gm,ro,Av,vn_rms,Cs_required,mismatch,Psampling,Pq,SNR_linear,SNR_dB,ENOB";
+
+    FILE *fp = fopen(fname, "r");
+    if (!fp) {
+         printf("ERROR: Unable to open CSV file '%s'.\n", fname); return 0;
+    }
+
+    char line[500]; // assume max 500
+
+    while (fgets(line, sizeof(line), fp) && line[0] == '#') 
+    {}              // skip the timestamp
+
+    if (feof(fp)) {         // check empty file
+        fclose(fp);
+        printf("ERROR: CSV empty."); 
+        return 0; 
+    }
+
+    line[strcspn(line, "\r\n")] = '\0';         // remove end of line
+    if (strcmp(line, HEADER) != 0) {            // compare to predefined header
+        fclose(fp);
+        printf("ERROR: CSV header format mismatch.");
+        return 0;
+    }
+
+    if (!fgets(line, sizeof(line), fp)) {        // check row exist
+        fclose(fp); 
+        printf("ERROR: Missing data row.");
+        return 0; 
+    }
+    line[strcspn(line, "\r\n")] = '\0';
+
+    double v[29];
+    int nbits;
+
+    int n = sscanf(line,"%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%d,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf",
+        &v[0],  &v[1],  &v[2],  &v[3],  &v[4],  &v[5],  &v[6],  &v[7],
+        &v[8],  &v[9],  &v[10], &v[11], &v[12], &v[13], &v[14], &nbits,
+        &v[15], &v[16], &v[17], &v[18], &v[19], &v[20], &v[21], &v[22],
+        &v[23], &v[24], &v[25], &v[26], &v[27], &v[28]
+    );
+
+    fclose(fp);
+
+    if (n != 30) {      // check num of colomns
+        printf("ERROR: Data row parse failed (wrong count/format)."); return 0; 
+    }
+
+    // store number
+    device.mu_n = v[0];        device.Cox = v[1];        device.W = v[2];        device.L = v[3];
+    device.VGS  = v[4];        device.VTH = v[5];        device.VDS = v[6];      device.lambda = v[7];
+    device.Temperature = v[8]; device.AC  = v[9];        device.Area = v[10];    device.Cs = v[11];
+    device.vrms = v[12];       device.Ron = v[13];       device.VFS = v[14];     device.Nbits = nbits;
+
+    results.VOV = v[15];            results.ID_linear = v[16];     results.ID_saturation = v[17];
+    results.gm  = v[18];            results.ro = v[19];            results.Av = v[20];
+    results.vn_rms = v[21];         results.Cs_required = v[22];   results.mismatch = v[23];
+    results.Psampling = v[24];      results.Pq = v[25];            results.SNR_linear = v[26];
+    results.SNR_dB = v[27];         results.ENOB = v[28];
+
+    printf("\nCSV successfully imported");
+    return 1;
 }

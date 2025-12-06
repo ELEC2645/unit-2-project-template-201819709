@@ -12,6 +12,9 @@ void print_device_parameters(int choice);
 int confirm_new_input_or_use_existing(void);
 void clear_screen(void);
 void modify_single_parameter(void);
+int confirm_input_or_output(void);
+int import_device_report_csv(const char *fname);
+void choose_in_or_out(void);
 
 typedef struct {
 

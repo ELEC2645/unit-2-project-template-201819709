@@ -83,7 +83,7 @@ static void select_menu_item(int input)
             go_back_to_main();
             break;
         case 4:
-            export_all_parameters_to_file();
+            choose_in_or_out();
             go_back_to_main();
             break;
         case 5:
@@ -103,7 +103,7 @@ static void print_main_menu(void)
            "\t1. Single MOS device parameter calculations\t\t\n"
            "\t2. Device component selection calculations\t\t\n"
            "\t3. Performance calculation\t\t\n"
-           "\t4. Printout Metrics\t\t\n"
+           "\t4. Printout / Read from file\t\t\n"
            "\t5. Modify single parameter\t\t\n"
            "\t6. Exit the program\t\t\t\t\n"
            "\t\t\t\t\t\t\n");

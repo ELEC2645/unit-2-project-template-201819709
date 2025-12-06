@@ -196,3 +196,17 @@ void clear_screen(void) {
     printf("\033[2J\033[H");    // clear screen + move cursor to top-left (ANSI escape codes)
     fflush(stdout);
 }
+
+int confirm_input_or_output(void)
+{
+    for (;;) {
+        printf("Which CSV mode? (1 = INPUT/read CSV into program, 2 = OUTPUT/write CSV from program): \n");
+        printf("If you are reading a file, make sure file name match 'device_report.csv' exactly!\n");
+        char buf[16];
+        if (!fgets(buf, sizeof(buf), stdin)) { puts("\nInput error. Exiting."); exit(1); }
+        buf[strcspn(buf, "\r\n")] = '\0';
+        if (buf[0] == '1' )return 1;
+        if (buf[0] == '2' ) return 0;
+        printf("Please type '1' or '2'. Asking again.\n");
+    }
+}
